@@ -1,0 +1,23 @@
+workspaces:
+  - name: docker
+    checkouts:
+      - path: gopath/src/github.com/docker/docker
+        repo:
+          git: https://github.com/moby/moby.git
+        version_spec: "20.10"
+        manifest:
+          overlays:
+            - content: |
+                hooks:
+                  post-checkout:
+                    cmd: |
+                      # Recommend vscode extensions
+                      [[ -e ".vscode/extensions.json" ]] | mkdir -p .vscode; echo '{"recommendations": ["golang.go"]}' > .vscode/extensions.json
+    packages:
+      - name: golang
+        version: ~1.20
+    base_snapshot: oci://docker.io/koitown/docker-dev:20.10
+    env:
+      - GO111MODULE=off
+      - GOPATH=/home/owner/gopath
+
